@@ -95,7 +95,6 @@ public class ImportRecipe extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-
             try {
                 Document doc = Jsoup.connect(url.getText().toString()).get();
                 Elements ings = doc.getElementsByClass("recipe-ingred_txt added");
@@ -116,11 +115,19 @@ public class ImportRecipe extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            debugger.setText(ingredients.get(0)+" "+ingredients.get(1));
+            addIng(ingredients, name.getText().toString());
         }
     }
 
+    public void addIng(ArrayList<String> ingredients, String n) {
+        DBHandler h = new DBHandler(this);
+        int rid = h.findRID(n);
+        for (String i : ingredients) {
+            Ingredient ing = new Ingredient(rid,i);
+            h.addIngredient(ing);
+        }
 
+    }
 
     //Adds scraped data and recipe to the db
     public void add(View v) throws IOException {

@@ -165,6 +165,22 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
         return result;
     }
+
+    //used to get the Recipe ID and used later in the scraping function
+    public int findRID(String n) {
+        String query = "SELECT * FROM "+Tname+" WHERE "+name+"= \""+n+"\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cur = db.rawQuery(query,null);
+
+        if(cur.moveToFirst()) {
+            int tmpRID = cur.getInt(1);
+            cur.close();
+            return tmpRID;
+        }
+        db.close();
+        return 0;
+    }
+
     //adds ingredient
     public void addIngredient(Ingredient i) {
         ContentValues vals = new ContentValues();
@@ -190,7 +206,6 @@ public class DBHandler extends SQLiteOpenHelper{
             int tmpRID = cur.getInt(1);
             String tmpName = cur.getString(2);
             cur.close();
-
             myI = new Ingredient(tmpID,tmpRID,tmpName);
         }
         db.close();

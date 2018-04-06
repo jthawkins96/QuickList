@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 
 import java.util.ArrayList;
 
@@ -14,7 +18,7 @@ public class Home extends AppCompatActivity {
     private String kstep="stepcount";
     private static final boolean USE_FLAG=true;
     private static final int flag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
-    TextView []tv=new TextView[3];
+    private LinearLayout listlayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,26 +31,50 @@ public class Home extends AppCompatActivity {
         else myData.getInt(kstep);
 
         rotd=findViewById(R.id.rod);
-
-        tv[0]=(TextView)findViewById(R.id.ing1);
-        tv[1]=(TextView)findViewById(R.id.ing2);
-        tv[2]=(TextView)findViewById(R.id.ing3);
-
+        listlayout=findViewById(R.id.listlayout);
         //populating the db with recipes
         Recipe r1 = new Recipe("Jack",1,"Chicken","www.chicken.com");
         Recipe r2 = new Recipe("Jack",2,"Beef","www.beef.com");
         Recipe r3 = new Recipe("Jack",3,"Bread","www.bread.com");
 
+        Ingredient i1 = new Ingredient(2,"Flour");
+        Ingredient i2 = new Ingredient(2,"Lemon");
+        Ingredient i3 = new Ingredient(2,"Baking Soda");
+
+        Ingredient i4 = new Ingredient(3,"Pepper");
+        Ingredient i5 = new Ingredient(3,"Salt");
+        Ingredient i6 = new Ingredient(3,"Baking Soda");
+
+        Ingredient i7 = new Ingredient(1,"Flour");
+        Ingredient i8 = new Ingredient(1,"Water");
+        Ingredient i9 = new Ingredient(1,"Baking Soda");
+
         DBHandler h2 = new DBHandler(this);
+
         h2.addRecipe(r1);
         h2.addRecipe(r2);
         h2.addRecipe(r3);
+
+        h2.addIngredient(i1);
+        h2.addIngredient(i2);
+        h2.addIngredient(i3);
 
         //Selecting a random recipe to display as the recipe of the day
         String s = h2.selectRandomRecipe();
         int recipeid = h2.findrecipeid(s);
         ArrayList<String> ings = h2.insertIngredients(recipeid);
+        if(ings.size()==0) {
+            Toast.makeText(this,"List is empty",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            for (String i : ings) {
+                TextView tv=new TextView(this);
+                tv.setText(i);
+                this.listlayout.addView(tv);
+            }
+        }
         rotd.setText(s);
+
     }
 
     public void onListClick(View v) {

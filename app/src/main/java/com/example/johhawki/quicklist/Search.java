@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class Search extends AppCompatActivity {
     private int step;
@@ -15,10 +18,7 @@ public class Search extends AppCompatActivity {
     private static final boolean USE_FLAG=true;
     private static final int flag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
     EditText term;
-    TextView user;
-    TextView recipeid;
-    TextView recipename;
-    TextView recipeurl;
+    private LinearLayout lout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +26,7 @@ public class Search extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         term=findViewById(R.id.term);
-        user=findViewById(R.id.username);
-        recipeid=findViewById(R.id.rid);
-        recipename=findViewById(R.id.rname);
-        recipeurl=findViewById(R.id.url);
+        lout=findViewById(R.id.recipelayout);
         Bundle myData = getIntent().getExtras();
         if(myData==null) {
             step=0;
@@ -40,21 +37,11 @@ public class Search extends AppCompatActivity {
         String te = term.getText().toString();
         DBHandler h = new DBHandler(this);
 
-        Recipe r = h.findRecipe(te);
-        Log.d("find","Finding Recipe");
-        if(r==null) {
-            Toast.makeText(this, "Unable to find Recipe",Toast.LENGTH_LONG).show();
-        }
-        else {
-            if(r.getUser()=="") {
-                user.setText("None");
-            }
-            else {
-                user.setText(r.getUser());
-            }
-            recipeid.setText(String.valueOf(r.getRID()));
-            recipename.setText(r.getName());
-            recipeurl.setText(r.getUrl());
+        ArrayList<String> rs = h.listRecipes(te);
+        for(String r: rs) {
+            TextView tv=new TextView(this);
+            tv.setText(r);
+            this.lout.addView(tv);
         }
     }
     public void onHomeClick(View v) {

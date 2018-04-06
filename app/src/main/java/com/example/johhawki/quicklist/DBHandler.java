@@ -53,6 +53,7 @@ public class DBHandler extends SQLiteOpenHelper{
 
         onCreate(db);
     }
+
     //selects a random recipe from the db
     public String selectRandomRecipe() {
         ArrayList<String> list = new ArrayList();
@@ -70,6 +71,7 @@ public class DBHandler extends SQLiteOpenHelper{
         String n = list.get(rand.nextInt(list.size()));
         return n;
     }
+
     //finds the recipe id to get the ingredients for the Recipe of the Day
     public int findrecipeid(String rname) {
         int[] list= new int[1];
@@ -83,6 +85,7 @@ public class DBHandler extends SQLiteOpenHelper{
         }
         return list[0];
     }
+
     //Uses the RID to get the ingredients for the recipe of the day
     public ArrayList<String> insertIngredients(int recipeid) {
         ArrayList<String> list = new ArrayList();
@@ -96,8 +99,31 @@ public class DBHandler extends SQLiteOpenHelper{
                 cur.moveToNext();
             }
         }
+
         return list;
     }
+
+    //takes a search term and returns a list of recipes like the search term
+    public ArrayList<String> listRecipes(String n) {
+        String query = "SELECT * FROM "+Tname+" WHERE "+name+" LIKE '%"+n+"%'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cur = db.rawQuery(query,null);
+        ArrayList<String> rs=new ArrayList();
+        if(cur.moveToFirst()) {
+            if (cur.moveToFirst()) {
+                while (!cur.isAfterLast()) {
+                    String tmpName = cur.getString(2);
+                    rs.add(tmpName);
+                    cur.moveToNext();
+                }
+            }
+            cur.close();
+        }
+        db.close();
+
+        return rs;
+    }
+
     //Adds recipes
     public void addRecipe(Recipe r) {
         ContentValues vals = new ContentValues();
@@ -110,6 +136,7 @@ public class DBHandler extends SQLiteOpenHelper{
         db.insert(Tname, null, vals);
         db.close();
     }
+
     //Finds Recipes
     public Recipe findRecipe(String n) {
         String query = "SELECT * FROM "+Tname+" WHERE "+name+"= \""+n+"\"";
@@ -131,6 +158,7 @@ public class DBHandler extends SQLiteOpenHelper{
 
         return myR;
     }
+
     //updates the recipe name
     public Boolean updateRecipe(String n, String n2) {
         String query = "UPDATE "+Tname+" SET "+name+"='"+n2+"' WHERE "+name+"= \""+n+"\"";
@@ -144,6 +172,7 @@ public class DBHandler extends SQLiteOpenHelper{
 
         return result;
     }
+
     //deletes the recipe with a certain name
     public boolean deleteRecipe(String rname) {
         boolean result = false;
@@ -212,6 +241,7 @@ public class DBHandler extends SQLiteOpenHelper{
 
         return myI;
     }
+
     //deletes ingredient
     public boolean deleteIngredient(String iname) {
         boolean result = false;
@@ -233,6 +263,4 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
         return result;
     }
-
-
 }

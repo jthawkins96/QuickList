@@ -33,17 +33,30 @@ public class Search extends AppCompatActivity {
         }
         else myData.getInt(kstep);
     }
+
     public void search(View view) {
+
         String te = term.getText().toString();
         DBHandler h = new DBHandler(this);
 
         ArrayList<String> rs = h.listRecipes(te);
         for(String r: rs) {
+            final String tmpR = r;
             TextView tv=new TextView(this);
+            tv.setTextSize(20);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), RecipesActivity.class);
+                    intent.putExtra("RECIPE", tmpR);
+                    startActivity(intent);
+                }
+            });
             tv.setText(r);
             this.lout.addView(tv);
         }
     }
+
     public void onHomeClick(View v) {
         Intent myInt = new Intent(this, Home.class);
         if(USE_FLAG) {

@@ -37,17 +37,17 @@ public class Home extends AppCompatActivity {
         Recipe r2 = new Recipe("Jack",2,"Beef","www.beef.com");
         Recipe r3 = new Recipe("Jack",3,"Bread","www.bread.com");
 
-        Ingredient i1 = new Ingredient(2,"Flour");
-        Ingredient i2 = new Ingredient(2,"Lemon");
-        Ingredient i3 = new Ingredient(2,"Baking Soda");
+        Ingredient i1 = new Ingredient(2,"1/2 lb Beef");
+        Ingredient i2 = new Ingredient(2,"1/2 tsp Salt");
+        Ingredient i3 = new Ingredient(2,"1 tbsp Lemon Juice");
 
-        Ingredient i4 = new Ingredient(3,"Pepper");
-        Ingredient i5 = new Ingredient(3,"Salt");
-        Ingredient i6 = new Ingredient(3,"Baking Soda");
+        Ingredient i4 = new Ingredient(3,"1 cup Flour");
+        Ingredient i5 = new Ingredient(3,"1 tsp Salt");
+        Ingredient i6 = new Ingredient(3,"1/2 cup Water");
 
-        Ingredient i7 = new Ingredient(1,"Flour");
-        Ingredient i8 = new Ingredient(1,"Water");
-        Ingredient i9 = new Ingredient(1,"Baking Soda");
+        Ingredient i7 = new Ingredient(1,"1 tsp Salt");
+        Ingredient i8 = new Ingredient(1,"1 tsp Black Pepper");
+        Ingredient i9 = new Ingredient(1,"1 tsp Baking Soda");
 
         DBHandler h2 = new DBHandler(this);
 
@@ -58,6 +58,12 @@ public class Home extends AppCompatActivity {
         h2.addIngredient(i1);
         h2.addIngredient(i2);
         h2.addIngredient(i3);
+        h2.addIngredient(i4);
+        h2.addIngredient(i5);
+        h2.addIngredient(i6);
+        h2.addIngredient(i7);
+        h2.addIngredient(i8);
+        h2.addIngredient(i9);
 
         //Selecting a random recipe to display as the recipe of the day
         String s = h2.selectRandomRecipe();

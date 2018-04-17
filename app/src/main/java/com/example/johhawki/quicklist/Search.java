@@ -1,6 +1,7 @@
 package com.example.johhawki.quicklist;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,10 +41,14 @@ public class Search extends AppCompatActivity {
         DBHandler h = new DBHandler(this);
 
         ArrayList<String> rs = h.listRecipes(te);
+        if(rs.size()==0) {
+            Toast.makeText(getApplicationContext(), "No recipes found",Toast.LENGTH_LONG).show();
+        }
         for(String r: rs) {
             final String tmpR = r;
             TextView tv=new TextView(this);
             tv.setTextSize(20);
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

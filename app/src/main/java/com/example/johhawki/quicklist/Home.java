@@ -35,39 +35,9 @@ public class Home extends AppCompatActivity {
         listlayout=findViewById(R.id.listlayout);
 
         listlayout.removeAllViews();
-
-        //populating the db with recipes
-        Recipe r1 = new Recipe("Jack",1,"Chicken","www.chicken.com");
-        Recipe r2 = new Recipe("Jack",2,"Beef","www.beef.com");
-        Recipe r3 = new Recipe("Jack",3,"Bread","www.bread.com");
-
-        Ingredient i1 = new Ingredient(2,"1/2 lb Beef");
-        Ingredient i2 = new Ingredient(2,"1/2 tsp Salt");
-        Ingredient i3 = new Ingredient(2,"1 tbsp Lemon Juice");
-
-        Ingredient i4 = new Ingredient(3,"1 cup Flour");
-        Ingredient i5 = new Ingredient(3,"1 tsp Salt");
-        Ingredient i6 = new Ingredient(3,"1/2 cup Water");
-
-        Ingredient i7 = new Ingredient(1,"1 tsp Salt");
-        Ingredient i8 = new Ingredient(1,"1 tsp Black Pepper");
-        Ingredient i9 = new Ingredient(1,"1 tsp Baking Soda");
-
         DBHandler h2 = new DBHandler(this);
+        //populating the db with recipes
 
-        h2.addRecipe(r1);
-        h2.addRecipe(r2);
-        h2.addRecipe(r3);
-
-        h2.addIngredient(i1);
-        h2.addIngredient(i2);
-        h2.addIngredient(i3);
-        h2.addIngredient(i4);
-        h2.addIngredient(i5);
-        h2.addIngredient(i6);
-        h2.addIngredient(i7);
-        h2.addIngredient(i8);
-        h2.addIngredient(i9);
 
         //Selecting a random recipe to display as the recipe of the day
         String s = h2.selectRandomRecipe();

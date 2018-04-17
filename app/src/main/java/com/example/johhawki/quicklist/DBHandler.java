@@ -35,10 +35,10 @@ public class DBHandler extends SQLiteOpenHelper{
 
     @Override public void onCreate(SQLiteDatabase db) {
         String CREATE_RECIPES_TABLE = "Create table "+Tname+"("+User+" Varchar(255) NOT NULL, "+
-                RID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                RID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "+
                 name+" TEXT NOT NULL, "+
                 url+" VARCHAR(255))";
-        String CREATE_INGREDIENTS_TABLE = "Create table "+Tname2+"("+IID+" INTEGER NOT NULL, "+
+        String CREATE_INGREDIENTS_TABLE = "Create table "+Tname2+"("+IID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 RID2+" INTEGER NOT NULL, "+
                 name2+" TEXT NOT NULL)";
         String CREATE_LIST_TABLE = "Create table "+Tname3+"("+IID+" INTEGER NOT NULL, "+
@@ -48,7 +48,73 @@ public class DBHandler extends SQLiteOpenHelper{
         db.execSQL(CREATE_RECIPES_TABLE);
         db.execSQL(CREATE_LIST_TABLE);
 
+        ContentValues vals = new ContentValues();
+        vals.put(User, "Jack");
+        vals.put(RID,1);
+        vals.put(name,"Chicken Noodle Soup");
+        vals.put(url,"www.chickensoup.com");
 
+        ContentValues vals2 = new ContentValues();
+        vals.put(User, "Jack");
+        vals.put(RID,2);
+        vals.put(name,"Chicken Parmesan");
+        vals.put(url,"www.chickenparm.com");
+
+        ContentValues vals3 = new ContentValues();
+        vals.put(User, "Jack");
+        vals.put(RID,3);
+        vals.put(name,"New York Strip Steak");
+        vals.put(url,"www.steak.com");
+
+        db.insert(Tname, null, vals);
+        db.insert(Tname,null,vals2);
+        db.insert(Tname,null,vals3);
+
+        ContentValues ivals = new ContentValues();
+        vals.put(RID2, 1);
+        vals.put(name2,"Chicken Broth");
+
+        ContentValues ivals2 = new ContentValues();
+        vals.put(RID2, 1);
+        vals.put(name2,"1/2 lb Chicken");
+
+        ContentValues ivals3 = new ContentValues();
+        vals.put(RID2, 1);
+        vals.put(name2,"Noodles");
+
+        ContentValues ivals4 = new ContentValues();
+        vals.put(RID2, 2);
+        vals.put(name2,"1lb Chicken");
+
+        ContentValues ivals5 = new ContentValues();
+        vals.put(RID2, 2);
+        vals.put(name2,"Parmesan Cheese");
+
+        ContentValues ivals6 = new ContentValues();
+        vals.put(RID2, 2);
+        vals.put(name2,"Marinara Sauce");
+
+        ContentValues ivals7 = new ContentValues();
+        vals.put(RID2, 3);
+        vals.put(name2,"1/2lb New York Strip");
+
+        ContentValues ivals8 = new ContentValues();
+        vals.put(RID2, 3);
+        vals.put(name2,"1tsp salt");
+
+        ContentValues ivals9 = new ContentValues();
+        vals.put(RID2, 3);
+        vals.put(name2,"1 tbsp olive oil");
+
+        db.insert(Tname2, null, ivals);
+        db.insert(Tname2, null, ivals2);
+        db.insert(Tname2, null, ivals3);
+        db.insert(Tname2, null, ivals4);
+        db.insert(Tname2, null, ivals5);
+        db.insert(Tname2, null, ivals6);
+        db.insert(Tname2, null, ivals7);
+        db.insert(Tname2, null, ivals8);
+        db.insert(Tname2, null, ivals9);
     }
 
     @Override
@@ -318,6 +384,18 @@ public class DBHandler extends SQLiteOpenHelper{
 
     public void clearList() {
         String query = "DELETE FROM "+Tname3;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+    }
+
+    public void clearRecipeDB() {
+        String query = "DELETE FROM "+Tname;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+    }
+
+    public void clearIngredientDB() {
+        String query = "DELETE FROM "+Tname2;
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
     }

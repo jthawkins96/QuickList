@@ -25,7 +25,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Search" />
-        <activity android:name=".TestDBpage" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -37,8 +36,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".UpdateDB" />
-        <activity android:name=".TestIngredientDB" />
         <activity android:name=".RecipesActivity"></activity>
     </application>
 

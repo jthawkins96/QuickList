@@ -86,6 +86,8 @@ public class ImportRecipe extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+
+            //JSOUP code to scrape the data
             try {
                 Document doc = Jsoup.connect(url.getText().toString()).get();
                 Elements ings = doc.getElementsByClass("recipe-ingred_txt added");
@@ -106,7 +108,11 @@ public class ImportRecipe extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
+
+            //running addIng function to insert each ingredient into the list db
             addIng(ingredients, name.getText().toString());
+
+            //moving to the list page after inserting ingredients
             Intent myInt = new Intent(getApplicationContext(), MainActivity.class);
             if(USE_FLAG) {
                 myInt.addFlags(flag);
@@ -116,6 +122,8 @@ public class ImportRecipe extends AppCompatActivity {
         }
     }
 
+
+    //function to insert each ingredient into the list and ingredients dbs
     public void addIng(ArrayList<String> ingredients, String n) {
         DBHandler h = new DBHandler(this);
         int rid = h.findRID(n);
@@ -127,7 +135,7 @@ public class ImportRecipe extends AppCompatActivity {
 
     }
 
-    //Adds scraped data and recipe to the db
+    //Adds the recipe and then runs the scraper function
     public void add(View v) throws IOException {
         String n = name.getText().toString();
         String u = url.getText().toString();
@@ -141,14 +149,6 @@ public class ImportRecipe extends AppCompatActivity {
         h.addRecipe(r);
         scrape();
 
-//        Recipe tmpR = h.findRecipe(n);
-//        int ri = tmpR.getRID();
-
-
-//        for(String ingredient:ingredients) {
-//            Ingredient in = new Ingredient(ri,ingredient);
-//            h.addIngredient(in);
-//        }
         Toast.makeText(this, n+" was added to the DB",Toast.LENGTH_LONG).show();
     }
 }

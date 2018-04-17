@@ -215,6 +215,7 @@ public class DBHandler extends SQLiteOpenHelper{
         return 0;
     }
 
+    //finds and returns the id of an ingredient
     public int findIID(String ing) {
         String query = "SELECT * FROM "+Tname2+" WHERE "+name2+"= \""+ing+"\"";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -241,6 +242,7 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
     }
 
+    //finds an ingredient given the ingredient name
     public Ingredient findIngredient(String n) {
         String query = "SELECT * FROM "+Tname2+" WHERE "+name2+"= \""+n+"\"";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -282,6 +284,7 @@ public class DBHandler extends SQLiteOpenHelper{
         return result;
     }
 
+    //adds an ingredient to the shopping list
     public void addListIng(Ingredient ing) {
         ContentValues vals = new ContentValues();
         vals.put(IID,ing.getIID());
@@ -292,6 +295,7 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
     }
 
+    //selects all the ingredients in the list db, called on the MainActivity page
     public ArrayList<String> getListIng() {
         String query = "SELECT * FROM "+Tname3;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -310,5 +314,11 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
 
         return is;
+    }
+
+    public void clearList() {
+        String query = "DELETE FROM "+Tname3;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
     }
 }

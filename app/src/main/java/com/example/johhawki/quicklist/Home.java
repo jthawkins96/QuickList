@@ -1,6 +1,7 @@
 package com.example.johhawki.quicklist;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -32,6 +33,9 @@ public class Home extends AppCompatActivity {
 
         rotd=findViewById(R.id.rod);
         listlayout=findViewById(R.id.listlayout);
+
+        listlayout.removeAllViews();
+
         //populating the db with recipes
         Recipe r1 = new Recipe("Jack",1,"Chicken","www.chicken.com");
         Recipe r2 = new Recipe("Jack",2,"Beef","www.beef.com");
@@ -76,6 +80,7 @@ public class Home extends AppCompatActivity {
             for (String i : ings) {
                 TextView tv=new TextView(this);
                 tv.setText(i);
+                tv.setTextColor(Color.parseColor("#FFFFFF"));
                 this.listlayout.addView(tv);
             }
         }

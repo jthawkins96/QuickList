@@ -1,5 +1,6 @@
 package com.example.johhawki.quicklist;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -28,13 +29,21 @@ public class MainActivity extends AppCompatActivity {
         }
         else myData.getInt(kstep);
 
+        //Getting all the ingredients and listing them
         DBHandler h = new DBHandler(this);
         ArrayList<String> ings = h.getListIng();
         for (String i : ings) {
             TextView tv=new TextView(this);
             tv.setText(i);
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
             this.listC.addView(tv);
         }
+    }
+
+    public void onClearListClick(View v) {
+        listC.removeAllViews();
+        DBHandler h = new DBHandler(this);
+        h.clearList();
     }
 
     public void onHomeClick(View v) {
@@ -64,22 +73,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(myInt);
     }
 
-    public void onDbClick(View v) {
-        Intent myInt = new Intent(this, TestDBpage.class);
-        if(USE_FLAG) {
-            myInt.addFlags(flag);
-        }
-        myInt.putExtra(kstep,step+1);
-        startActivity(myInt);
-    }
-
-    public void onIngClick(View v) {
-        Intent myInt = new Intent(this, TestIngredientDB.class);
-        if(USE_FLAG) {
-            myInt.addFlags(flag);
-        }
-        myInt.putExtra(kstep,step+1);
-        startActivity(myInt);
-    }
 
 }

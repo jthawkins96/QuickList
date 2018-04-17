@@ -35,7 +35,7 @@ public class Search extends AppCompatActivity {
     }
 
     public void search(View view) {
-
+        lout.removeAllViews();
         String te = term.getText().toString();
         DBHandler h = new DBHandler(this);
 

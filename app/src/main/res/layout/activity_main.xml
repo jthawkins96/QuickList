@@ -21,8 +21,8 @@
             android:id="@+id/listTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
             android:text="Shopping List"
             android:textColor="@android:color/background_light"
             android:textColorLink="@android:color/background_dark"
@@ -33,12 +33,20 @@
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClearListClick"
+            android:text="Clear List" />
 
         <ScrollView
             android:id="@+id/scrollContainer"
             android:layout_width="match_parent"
-            android:layout_height="401dp">
+            android:layout_height="335dp">
 
             <LinearLayout
                 android:id="@+id/listContainer"
@@ -46,8 +54,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical" />
+                android:orientation="vertical">
+
+            </LinearLayout>
         </ScrollView>
+
     </LinearLayout>
 
     <LinearLayout

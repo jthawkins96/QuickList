@@ -27,6 +27,8 @@ public class DBHandler extends SQLiteOpenHelper{
     private static final String RID2 = "RID";
     private static final String name2 = "name";
 
+    private static final String Tname3 = "List";
+
     public DBHandler(Context context) {
         super(context,DBName,null,DBV);
     }
@@ -39,9 +41,12 @@ public class DBHandler extends SQLiteOpenHelper{
         String CREATE_INGREDIENTS_TABLE = "Create table "+Tname2+"("+IID+" INTEGER NOT NULL, "+
                 RID2+" INTEGER NOT NULL, "+
                 name2+" TEXT NOT NULL)";
+        String CREATE_LIST_TABLE = "Create table "+Tname3+"("+IID+" INTEGER NOT NULL, "+
+                name2+" TEXT NOT NULL)";
 
         db.execSQL(CREATE_INGREDIENTS_TABLE);
         db.execSQL(CREATE_RECIPES_TABLE);
+        db.execSQL(CREATE_LIST_TABLE);
 
 
     }
@@ -210,6 +215,19 @@ public class DBHandler extends SQLiteOpenHelper{
         return 0;
     }
 
+    public int findIID(String ing) {
+        String query = "SELECT * FROM "+Tname2+" WHERE "+name2+"= \""+ing+"\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cur = db.rawQuery(query,null);
+        if(cur.moveToFirst()) {
+            int tmpIID = cur.getInt(0);
+            cur.close();
+            return tmpIID;
+        }
+        db.close();
+        return 0;
+    }
+
     //adds ingredient
     public void addIngredient(Ingredient i) {
         ContentValues vals = new ContentValues();
@@ -262,5 +280,35 @@ public class DBHandler extends SQLiteOpenHelper{
         }
         db.close();
         return result;
+    }
+
+    public void addListIng(Ingredient ing) {
+        ContentValues vals = new ContentValues();
+        vals.put(IID,ing.getIID());
+        vals.put(name2,ing.getName());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(Tname3, null, vals);
+        db.close();
+    }
+
+    public ArrayList<String> getListIng() {
+        String query = "SELECT * FROM "+Tname3;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cur = db.rawQuery(query,null);
+        ArrayList<String> is=new ArrayList();
+        if(cur.moveToFirst()) {
+            if (cur.moveToFirst()) {
+                while (!cur.isAfterLast()) {
+                    String tmpName = cur.getString(1);
+                    is.add(tmpName);
+                    cur.moveToNext();
+                }
+            }
+            cur.close();
+        }
+        db.close();
+
+        return is;
     }
 }

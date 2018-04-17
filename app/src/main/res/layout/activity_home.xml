@@ -69,6 +69,7 @@
         android:paddingTop="50dp"
         android:text="Recipe of the Day"
         android:textAlignment="center"
+        android:textColor="@android:color/background_light"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/glayout"
         app:layout_constraintEnd_toEndOf="parent"

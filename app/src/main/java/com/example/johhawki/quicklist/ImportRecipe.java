@@ -71,15 +71,6 @@ public class ImportRecipe extends AppCompatActivity {
         startActivity(myInt);
     }
 
-    public void onTestClick(View v) {
-        Intent myInt = new Intent(this, TestDBpage.class);
-        if(USE_FLAG) {
-            myInt.addFlags(flag);
-        }
-        myInt.putExtra(kstep,step+1);
-        startActivity(myInt);
-    }
-
     // uses JSOUP to get the ingredients from Allrecipes.com
     public void scrape() {
         JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
@@ -116,6 +107,12 @@ public class ImportRecipe extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             addIng(ingredients, name.getText().toString());
+            Intent myInt = new Intent(getApplicationContext(), MainActivity.class);
+            if(USE_FLAG) {
+                myInt.addFlags(flag);
+            }
+            myInt.putExtra(kstep,step+1);
+            startActivity(myInt);
         }
     }
 
@@ -125,6 +122,7 @@ public class ImportRecipe extends AppCompatActivity {
         for (String i : ingredients) {
             Ingredient ing = new Ingredient(rid,i);
             h.addIngredient(ing);
+            h.addListIng(ing);
         }
 
     }

@@ -1,7 +1,10 @@
 package com.example.johhawki.quicklist;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,5 +38,23 @@ public class RecipesActivity extends AppCompatActivity {
                 this.ilayout.addView(tv);
             }
         }
+    }
+
+    public  void onAddIngClick(View v) {
+        DBHandler h = new DBHandler(this);
+        if (ilayout != null)
+        {
+            for (int x = 0; x < ilayout.getChildCount(); x++)
+            {
+                View kid = ilayout.getChildAt(x);
+                TextView ing = (TextView) kid;
+                String i = ing.getText().toString();
+                int iid = h.findIID(i);
+                Ingredient ingred = new Ingredient(iid,i);
+                h.addListIng(ingred);
+            }
+        }
+        Intent myInt = new Intent(this, MainActivity.class);
+        startActivity(myInt);
     }
 }

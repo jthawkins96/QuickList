@@ -43,84 +43,25 @@ public class DBHandler extends SQLiteOpenHelper{
                 name2+" TEXT NOT NULL)";
         String CREATE_LIST_TABLE = "Create table "+Tname3+"("+IID+" INTEGER NOT NULL, "+
                 name2+" TEXT NOT NULL)";
+        String INSERT_RECIPE = "INSERT INTO "+Tname+" (username, ID, name, url) "+"VALUES('USER', 1,'Chicken Parm','www.chickenparm.com')";
+        String INSERT_ING1 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'1/2 lb Chicken')";
+        String INSERT_ING2 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'Mozzarella Cheese')";
+        String INSERT_ING3 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'Marinara Sauce')";
 
         db.execSQL(CREATE_INGREDIENTS_TABLE);
         db.execSQL(CREATE_RECIPES_TABLE);
         db.execSQL(CREATE_LIST_TABLE);
-
-        ContentValues vals = new ContentValues();
-        vals.put(User, "Jack");
-        vals.put(RID,1);
-        vals.put(name,"Chicken Noodle Soup");
-        vals.put(url,"www.chickensoup.com");
-
-        ContentValues vals2 = new ContentValues();
-        vals.put(User, "Jack");
-        vals.put(RID,2);
-        vals.put(name,"Chicken Parmesan");
-        vals.put(url,"www.chickenparm.com");
-
-        ContentValues vals3 = new ContentValues();
-        vals.put(User, "Jack");
-        vals.put(RID,3);
-        vals.put(name,"New York Strip Steak");
-        vals.put(url,"www.steak.com");
-
-        db.insert(Tname, null, vals);
-        db.insert(Tname,null,vals2);
-        db.insert(Tname,null,vals3);
-
-        ContentValues ivals = new ContentValues();
-        vals.put(RID2, 1);
-        vals.put(name2,"Chicken Broth");
-
-        ContentValues ivals2 = new ContentValues();
-        vals.put(RID2, 1);
-        vals.put(name2,"1/2 lb Chicken");
-
-        ContentValues ivals3 = new ContentValues();
-        vals.put(RID2, 1);
-        vals.put(name2,"Noodles");
-
-        ContentValues ivals4 = new ContentValues();
-        vals.put(RID2, 2);
-        vals.put(name2,"1lb Chicken");
-
-        ContentValues ivals5 = new ContentValues();
-        vals.put(RID2, 2);
-        vals.put(name2,"Parmesan Cheese");
-
-        ContentValues ivals6 = new ContentValues();
-        vals.put(RID2, 2);
-        vals.put(name2,"Marinara Sauce");
-
-        ContentValues ivals7 = new ContentValues();
-        vals.put(RID2, 3);
-        vals.put(name2,"1/2lb New York Strip");
-
-        ContentValues ivals8 = new ContentValues();
-        vals.put(RID2, 3);
-        vals.put(name2,"1tsp salt");
-
-        ContentValues ivals9 = new ContentValues();
-        vals.put(RID2, 3);
-        vals.put(name2,"1 tbsp olive oil");
-
-        db.insert(Tname2, null, ivals);
-        db.insert(Tname2, null, ivals2);
-        db.insert(Tname2, null, ivals3);
-        db.insert(Tname2, null, ivals4);
-        db.insert(Tname2, null, ivals5);
-        db.insert(Tname2, null, ivals6);
-        db.insert(Tname2, null, ivals7);
-        db.insert(Tname2, null, ivals8);
-        db.insert(Tname2, null, ivals9);
+        db.execSQL(INSERT_RECIPE);
+        db.execSQL(INSERT_ING1);
+        db.execSQL(INSERT_ING2);
+        db.execSQL(INSERT_ING3);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int  oldV, int newV) {
         db.execSQL("DROP TABLE IF EXISTS "+Tname);
         db.execSQL("DROP TABLE IF EXISTS "+Tname2);
+        db.execSQL("DROP TABLE IF EXISTS "+Tname3);
 
         onCreate(db);
     }
@@ -245,25 +186,13 @@ public class DBHandler extends SQLiteOpenHelper{
     }
 
     //deletes the recipe with a certain name
-    public boolean deleteRecipe(String rname) {
+    public void deleteRecipe(String rname) {
         boolean result = false;
 
-        String query = "SELECT * FROM "+Tname+" WHERE "+name+"=\""+rname+"\"";
+        String query = "DELETE FROM "+Tname+" WHERE "+name+"=\""+rname+"\"";
 
         SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cur = db.rawQuery(query,null);
-
-        if(cur.moveToFirst()){
-            int tmpID = cur.getInt(1);
-
-            db.delete(Tname,RID+"= ?",new String[]{String.valueOf(tmpID)});
-
-            cur.close();
-            result=true;
-        }
-        db.close();
-        return result;
+        db.execSQL(query);
     }
 
     //used to get the Recipe ID and used later in the scraping function
@@ -329,25 +258,13 @@ public class DBHandler extends SQLiteOpenHelper{
     }
 
     //deletes ingredient
-    public boolean deleteIngredient(String iname) {
+    public void deleteIngredient(String iname) {
         boolean result = false;
 
-        String query = "SELECT * FROM "+Tname2+" WHERE "+name2+"=\""+iname+"\"";
+        String query = "DELETE FROM "+Tname2+" WHERE "+name2+"=\""+iname+"\"";
 
         SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cur = db.rawQuery(query,null);
-
-        if(cur.moveToFirst()){
-            int tmpID = cur.getInt(0);
-
-            db.delete(Tname2,IID+"= ?",new String[]{String.valueOf(tmpID)});
-
-            cur.close();
-            result=true;
-        }
-        db.close();
-        return result;
+        db.execSQL(query);
     }
 
     //adds an ingredient to the shopping list

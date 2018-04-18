@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else myData.getInt(kstep);
 
+
         //Getting all the ingredients and listing them
         DBHandler h = new DBHandler(this);
         ArrayList<String> ings = h.getListIng();

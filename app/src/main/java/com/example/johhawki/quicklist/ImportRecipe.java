@@ -91,17 +91,13 @@ public class ImportRecipe extends AppCompatActivity {
             try {
                 Document doc = Jsoup.connect(url.getText().toString()).get();
                 Elements ings = doc.getElementsByClass("recipe-ingred_txt added");
-                Element url = doc.select("a[class$=video-play]").first();
+                Element videourl = doc.select("a[class$=video-play]").first();
                 for (Element i : ings) {
                     ingredients.add(i.text());
                 }
-                if (url.attr("href").toString().contains("video")) {
-                    ingredients.add(url.attr("href"));
-                } else {
-                    ingredients.add("");
-                }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+
             }
             return null;
         }
@@ -136,19 +132,20 @@ public class ImportRecipe extends AppCompatActivity {
     }
 
     //Adds the recipe and then runs the scraper function
-    public void add(View v) throws IOException {
+    public void add(View v) {
         String n = name.getText().toString();
         String u = url.getText().toString();
-        if (u.matches("")) {
-            Toast.makeText(this, "You did not enter a url", Toast.LENGTH_SHORT).show();
-            return;
+        if (u.matches("") || n.matches("")) {
+            Toast.makeText(this, "You did not enter a Recipe Name/URL", Toast.LENGTH_SHORT).show();
         }
-        Recipe r = new Recipe("johhawki",n,u);
+        else {
+            Recipe r = new Recipe("johhawki", n, u);
 
-        DBHandler h = new DBHandler(this);
-        h.addRecipe(r);
-        scrape();
+            DBHandler h = new DBHandler(this);
+            h.addRecipe(r);
+            scrape();
 
-        Toast.makeText(this, n+" was added to the DB",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, n + " was added to the DB", Toast.LENGTH_LONG).show();
+        }
     }
 }

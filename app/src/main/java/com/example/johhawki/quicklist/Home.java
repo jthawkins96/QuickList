@@ -35,9 +35,11 @@ public class Home extends AppCompatActivity {
         listlayout=findViewById(R.id.listlayout);
 
         listlayout.removeAllViews();
-        DBHandler h2 = new DBHandler(this);
-        //populating the db with recipes
 
+        //clearing the test data each time its loaded
+        DBHandler h2 = new DBHandler(this);
+
+        //populating the db with recipes and ingredients
 
         //Selecting a random recipe to display as the recipe of the day
         String s = h2.selectRandomRecipe();
@@ -80,6 +82,25 @@ public class Home extends AppCompatActivity {
             myInt.addFlags(flag);
         }
         myInt.putExtra(kstep,step+1);
+        startActivity(myInt);
+    }
+
+    //function used to add ingredients to list from the home page if the user clicks "ADD INGREDIENTS"
+    public  void onAddIngClick(View v) {
+        DBHandler h = new DBHandler(this);
+        if (listlayout != null)
+        {
+            for (int x = 0; x < listlayout.getChildCount(); x++)
+            {
+                View kid = listlayout.getChildAt(x);
+                TextView ing = (TextView) kid;
+                String i = ing.getText().toString();
+                int iid = h.findIID(i);
+                Ingredient ingred = new Ingredient(iid,i);
+                h.addListIng(ingred);
+            }
+        }
+        Intent myInt = new Intent(this, MainActivity.class);
         startActivity(myInt);
     }
 }

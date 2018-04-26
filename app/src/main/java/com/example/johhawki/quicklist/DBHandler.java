@@ -34,16 +34,15 @@ public class DBHandler extends SQLiteOpenHelper{
     }
 
     @Override public void onCreate(SQLiteDatabase db) {
-        String CREATE_RECIPES_TABLE = "Create table "+Tname+"("+User+" Varchar(255) NOT NULL, "+
-                RID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "+
+        String CREATE_RECIPES_TABLE = "Create table "+Tname+"("+User+" Varchar(255) NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 name+" TEXT NOT NULL, "+
                 url+" VARCHAR(255))";
-        String CREATE_INGREDIENTS_TABLE = "Create table "+Tname2+"("+IID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+        String CREATE_INGREDIENTS_TABLE = "Create table "+Tname2+"(id INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 RID2+" INTEGER NOT NULL, "+
                 name2+" TEXT NOT NULL)";
         String CREATE_LIST_TABLE = "Create table "+Tname3+"("+IID+" INTEGER NOT NULL, "+
                 name2+" TEXT NOT NULL)";
-        String INSERT_RECIPE = "INSERT INTO "+Tname+" (username, ID, name, url) "+"VALUES('USER', 1,'Chicken Parm','www.chickenparm.com')";
+        String INSERT_RECIPE = "INSERT INTO "+Tname+" (username, name, url) "+"VALUES('USER','Chicken Parm','')";
         String INSERT_ING1 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'1/2 lb Chicken')";
         String INSERT_ING2 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'Mozzarella Cheese')";
         String INSERT_ING3 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'Marinara Sauce')";
@@ -81,6 +80,7 @@ public class DBHandler extends SQLiteOpenHelper{
         }
         Random rand = new Random();
         String n = list.get(rand.nextInt(list.size()));
+        db.close();
         return n;
     }
 
@@ -95,6 +95,7 @@ public class DBHandler extends SQLiteOpenHelper{
             rid = cur.getInt(1);
             list[0]=rid;
         }
+        db.close();
         return list[0];
     }
 
@@ -103,6 +104,7 @@ public class DBHandler extends SQLiteOpenHelper{
         ArrayList<String> list = new ArrayList();
         SQLiteDatabase db = this.getWritableDatabase();
         String query ="SELECT * from "+Tname2+" WHERE "+RID2+"="+recipeid;
+        System.out.println(query);
         Cursor cur = db.rawQuery(query, null);
         if (cur.moveToFirst()) {
             while (!cur.isAfterLast()) {
@@ -149,50 +151,18 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
     }
 
-    //Finds Recipes
-    public Recipe findRecipe(String n) {
+    public String findURL(String n) {
         String query = "SELECT * FROM "+Tname+" WHERE "+name+"= \""+n+"\"";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cur = db.rawQuery(query,null);
 
-        Recipe myR = null;
-
         if(cur.moveToFirst()) {
-            String tmpUser = cur.getString(0);
-            int tmpID = cur.getInt(1);
-            String tmpName = cur.getString(2);
-            String tmpUrl = cur.getString(3);
+            String tmpURL = cur.getString(3);
             cur.close();
-
-            myR = new Recipe(tmpUser,tmpID,tmpName,tmpUrl);
+            return tmpURL;
         }
         db.close();
-
-        return myR;
-    }
-
-    //updates the recipe name
-    public Boolean updateRecipe(String n, String n2) {
-        String query = "UPDATE "+Tname+" SET "+name+"='"+n2+"' WHERE "+name+"= \""+n+"\"";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cur = db.rawQuery(query,null);
-        Boolean result = false;
-        if(cur.moveToFirst()) {
-            result = true;
-        }
-        db.close();
-
-        return result;
-    }
-
-    //deletes the recipe with a certain name
-    public void deleteRecipe(String rname) {
-        boolean result = false;
-
-        String query = "DELETE FROM "+Tname+" WHERE "+name+"=\""+rname+"\"";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(query);
+        return "";
     }
 
     //used to get the Recipe ID and used later in the scraping function
@@ -227,7 +197,6 @@ public class DBHandler extends SQLiteOpenHelper{
     //adds ingredient
     public void addIngredient(Ingredient i) {
         ContentValues vals = new ContentValues();
-        vals.put(IID,i.getIID());
         vals.put(RID2,i.getRID());
         vals.put(name2,i.getName());
 
@@ -235,36 +204,6 @@ public class DBHandler extends SQLiteOpenHelper{
 
         db.insert(Tname2, null, vals);
         db.close();
-    }
-
-    //finds an ingredient given the ingredient name
-    public Ingredient findIngredient(String n) {
-        String query = "SELECT * FROM "+Tname2+" WHERE "+name2+"= \""+n+"\"";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cur = db.rawQuery(query,null);
-
-        Ingredient myI = null;
-
-        if(cur.moveToFirst()) {
-            int tmpID = cur.getInt(0);
-            int tmpRID = cur.getInt(1);
-            String tmpName = cur.getString(2);
-            cur.close();
-            myI = new Ingredient(tmpID,tmpRID,tmpName);
-        }
-        db.close();
-
-        return myI;
-    }
-
-    //deletes ingredient
-    public void deleteIngredient(String iname) {
-        boolean result = false;
-
-        String query = "DELETE FROM "+Tname2+" WHERE "+name2+"=\""+iname+"\"";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(query);
     }
 
     //adds an ingredient to the shopping list
@@ -278,7 +217,7 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
     }
 
-    //selects all the ingredients in the list db, called on the MainActivity page
+    //selects all the ingredients in the list table, called on the MainActivity page
     public ArrayList<String> getListIng() {
         String query = "SELECT * FROM "+Tname3;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -299,20 +238,9 @@ public class DBHandler extends SQLiteOpenHelper{
         return is;
     }
 
+    //clears shopping list table
     public void clearList() {
         String query = "DELETE FROM "+Tname3;
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(query);
-    }
-
-    public void clearRecipeDB() {
-        String query = "DELETE FROM "+Tname;
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(query);
-    }
-
-    public void clearIngredientDB() {
-        String query = "DELETE FROM "+Tname2;
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
     }

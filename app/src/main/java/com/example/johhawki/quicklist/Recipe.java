@@ -6,12 +6,6 @@ public class Recipe {
     private String Name;
     private String url;
 
-    public Recipe(String user, int id, String n, String u) {
-        User=user;
-        RID=id;
-        Name=n;
-        url=u;
-    }
     public Recipe(String user, String n, String u) {
         User=user;
         Name=n;

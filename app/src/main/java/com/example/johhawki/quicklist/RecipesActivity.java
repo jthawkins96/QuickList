@@ -39,8 +39,12 @@ public class RecipesActivity extends AppCompatActivity {
 
         recipename.setText(r);
         DBHandler h = new DBHandler(this);
+        String vUrl = h.findURL(r);
+
         int recipeid = h.findrecipeid(r);
+        System.out.println("-------------------------- "+recipeid+" ---------------------------");
         ArrayList<String> ings = h.insertIngredients(recipeid);
+        System.out.println("-------------------------- "+ings+" ---------------------------");
         if(ings.size()==0) {
             Toast.makeText(this,"List is empty",Toast.LENGTH_SHORT).show();
         }

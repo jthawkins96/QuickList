@@ -34,12 +34,10 @@ public class Home extends AppCompatActivity {
         rotd=findViewById(R.id.rod);
         listlayout=findViewById(R.id.listlayout);
 
+        //clearing the test data each time its loaded
         listlayout.removeAllViews();
 
-        //clearing the test data each time its loaded
         DBHandler h2 = new DBHandler(this);
-
-        //populating the db with recipes and ingredients
 
         //Selecting a random recipe to display as the recipe of the day
         String s = h2.selectRandomRecipe();

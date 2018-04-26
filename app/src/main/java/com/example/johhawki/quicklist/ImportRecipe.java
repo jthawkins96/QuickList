@@ -95,6 +95,11 @@ public class ImportRecipe extends AppCompatActivity {
                 for (Element i : ings) {
                     ingredients.add(i.text());
                 }
+                if (videourl.attr("href").toString().contains("video")) {
+                    ingredients.add(videourl.attr("href"));
+                } else {
+                    ingredients.add("");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -118,15 +123,25 @@ public class ImportRecipe extends AppCompatActivity {
         }
     }
 
-
     //function to insert each ingredient into the list and ingredients dbs
     public void addIng(ArrayList<String> ingredients, String n) {
         DBHandler h = new DBHandler(this);
+
+        //taking the last element of the ingredients array which is the url and inserting the recipe
+        Recipe r = new Recipe("johhawki",n,ingredients.get(ingredients.size()-1));
+        h.addRecipe(r);
+
+        //finding RID to insert ingredients
         int rid = h.findRID(n);
         for (String i : ingredients) {
-            Ingredient ing = new Ingredient(rid,i);
-            h.addIngredient(ing);
-            h.addListIng(ing);
+            if(ingredients.indexOf(i) == (ingredients.size() -1)) {
+                continue;
+            }
+            else {
+                Ingredient ing = new Ingredient(rid,i);
+                h.addIngredient(ing);
+                h.addListIng(ing);
+            }
         }
 
     }
@@ -139,12 +154,7 @@ public class ImportRecipe extends AppCompatActivity {
             Toast.makeText(this, "You did not enter a Recipe Name/URL", Toast.LENGTH_SHORT).show();
         }
         else {
-            Recipe r = new Recipe("johhawki", n, u);
-
-            DBHandler h = new DBHandler(this);
-            h.addRecipe(r);
             scrape();
-
             Toast.makeText(this, n + " was added to the DB", Toast.LENGTH_LONG).show();
         }
     }

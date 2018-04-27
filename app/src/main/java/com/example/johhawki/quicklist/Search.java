@@ -35,12 +35,43 @@ public class Search extends AppCompatActivity {
         else myData.getInt(kstep);
     }
 
+    //Search Function
     public void search(View view) {
         lout.removeAllViews();
         String te = term.getText().toString();
         DBHandler h = new DBHandler(this);
 
+        //uses the list recipes function in DBHandler to get the list of recipes like the search term
         ArrayList<String> rs = h.listRecipes(te);
+        if(rs.size()==0) {
+            Toast.makeText(getApplicationContext(), "No recipes found",Toast.LENGTH_LONG).show();
+        }
+
+        //Inserting a textview into the list for each recipe found
+        for(String r: rs) {
+            final String tmpR = r;
+            TextView tv=new TextView(this);
+            tv.setTextSize(20);
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), RecipesActivity.class);
+                    intent.putExtra("RECIPE", tmpR);
+                    startActivity(intent);
+                }
+            });
+            tv.setText(r);
+            lout.addView(tv);
+        }
+    }
+
+    //Similar to search function except lists all recipes
+    public void onListAll(View v) {
+        lout.removeAllViews();
+        DBHandler h = new DBHandler(this);
+
+        ArrayList<String> rs = h.listAllRecipes();
         if(rs.size()==0) {
             Toast.makeText(getApplicationContext(), "No recipes found",Toast.LENGTH_LONG).show();
         }
@@ -58,7 +89,7 @@ public class Search extends AppCompatActivity {
                 }
             });
             tv.setText(r);
-            this.lout.addView(tv);
+            lout.addView(tv);
         }
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4682B4"
+    android:background="@drawable/ic_qlist_background"
     tools:context="com.example.johhawki.quicklist.RecipesActivity"
     tools:layout_editor_absoluteY="81dp">
 
@@ -66,17 +66,22 @@
 
         <Button
             android:id="@+id/ingBtn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onAddIngClick"
             android:text="Add Ingredients" />
+
+        <Button
+            android:id="@+id/videoBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onVideoClick"
+            android:text="Watch Video" />
 
         <Button
             android:id="@+id/shareBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onShareClick"
             android:text="Share" />
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.johhawki.quicklist;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -77,15 +79,16 @@ public class ImportRecipe extends AppCompatActivity {
         jsoupAsyncTask.execute();
     }
 
-    private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class JsoupAsyncTask extends AsyncTask<Void, Void, String> {
         ArrayList<String> ingredients = new ArrayList<String>();
+        String error= "There was a problem parsing the URL";
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
 
             //JSOUP code to scrape the data
             try {
@@ -95,31 +98,35 @@ public class ImportRecipe extends AppCompatActivity {
                 for (Element i : ings) {
                     ingredients.add(i.text());
                 }
-                if (videourl.attr("href").toString().contains("video")) {
+                if (videourl.attr("href").contains("video")) {
                     ingredients.add(videourl.attr("href"));
                 } else {
                     ingredients.add("");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-
+                return error;
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String err) {
+            if(err==null) {
+                //running addIng function to insert each ingredient into the list db
+                addIng(ingredients, name.getText().toString());
 
-            //running addIng function to insert each ingredient into the list db
-            addIng(ingredients, name.getText().toString());
-
-            //moving to the list page after inserting ingredients
-            Intent myInt = new Intent(getApplicationContext(), MainActivity.class);
-            if(USE_FLAG) {
-                myInt.addFlags(flag);
+                //moving to the list page after inserting ingredients
+                Intent myInt = new Intent(getApplicationContext(), MainActivity.class);
+                if(USE_FLAG) {
+                    myInt.addFlags(flag);
+                }
+                myInt.putExtra(kstep,step+1);
+                startActivity(myInt);
             }
-            myInt.putExtra(kstep,step+1);
-            startActivity(myInt);
+            else {
+                //setting the debugger to let the user know there was an error
+                debugger.setText(err);
+            }
         }
     }
 
@@ -150,12 +157,12 @@ public class ImportRecipe extends AppCompatActivity {
     public void add(View v) {
         String n = name.getText().toString();
         String u = url.getText().toString();
+        debugger.setText("");
         if (u.matches("") || n.matches("")) {
             Toast.makeText(this, "You did not enter a Recipe Name/URL", Toast.LENGTH_SHORT).show();
         }
         else {
             scrape();
-            Toast.makeText(this, n + " was added to the DB", Toast.LENGTH_LONG).show();
         }
     }
 }

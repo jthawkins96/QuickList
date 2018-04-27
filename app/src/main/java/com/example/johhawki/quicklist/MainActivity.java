@@ -41,6 +41,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    //Once the user revisits the page populate the list
+    protected void onResume() {
+        super.onResume();
+        DBHandler h = new DBHandler(this);
+        ArrayList<String> ings = h.getListIng();
+        for (String i : ings) {
+            TextView tv=new TextView(this);
+            tv.setText(i);
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
+            this.listC.addView(tv);
+        }
+    }
+
+    //Clears the list table and view
     public void onClearListClick(View v) {
         listC.removeAllViews();
         DBHandler h = new DBHandler(this);

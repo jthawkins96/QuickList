@@ -46,6 +46,8 @@ public class Home extends AppCompatActivity {
         if(ings.size()==0) {
             Toast.makeText(this,"List is empty",Toast.LENGTH_SHORT).show();
         }
+
+        //adding each ingredient to the view
         else {
             for (String i : ings) {
                 TextView tv=new TextView(this);

@@ -42,6 +42,8 @@ public class DBHandler extends SQLiteOpenHelper{
                 name2+" TEXT NOT NULL)";
         String CREATE_LIST_TABLE = "Create table "+Tname3+"("+IID+" INTEGER NOT NULL, "+
                 name2+" TEXT NOT NULL)";
+
+        //Populating db with initial Recipe
         String INSERT_RECIPE = "INSERT INTO "+Tname+" (username, name, url) "+"VALUES('USER','Chicken Parm','')";
         String INSERT_ING1 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'1/2 lb Chicken')";
         String INSERT_ING2 = "INSERT INTO "+Tname2+" (RID, name) "+"VALUES(1,'Mozzarella Cheese')";
@@ -104,7 +106,6 @@ public class DBHandler extends SQLiteOpenHelper{
         ArrayList<String> list = new ArrayList();
         SQLiteDatabase db = this.getWritableDatabase();
         String query ="SELECT * from "+Tname2+" WHERE "+RID2+"="+recipeid;
-        System.out.println(query);
         Cursor cur = db.rawQuery(query, null);
         if (cur.moveToFirst()) {
             while (!cur.isAfterLast()) {
@@ -113,7 +114,7 @@ public class DBHandler extends SQLiteOpenHelper{
                 cur.moveToNext();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -138,7 +139,28 @@ public class DBHandler extends SQLiteOpenHelper{
         return rs;
     }
 
-    //Adds recipes
+    //selecting every recipe from the recipe table and sending it to the Search activity
+    public ArrayList<String> listAllRecipes() {
+        String query = "SELECT * FROM "+Tname;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cur = db.rawQuery(query,null);
+        ArrayList<String> rs=new ArrayList();
+        if(cur.moveToFirst()) {
+            if (cur.moveToFirst()) {
+                while (!cur.isAfterLast()) {
+                    String tmpName = cur.getString(2);
+                    rs.add(tmpName);
+                    cur.moveToNext();
+                }
+            }
+            cur.close();
+        }
+        db.close();
+
+        return rs;
+    }
+
+    //Adds recipes to recipe table
     public void addRecipe(Recipe r) {
         ContentValues vals = new ContentValues();
         vals.put(User,r.getUser());
@@ -151,6 +173,7 @@ public class DBHandler extends SQLiteOpenHelper{
         db.close();
     }
 
+    //Returns the recipe url given a recipe name
     public String findURL(String n) {
         String query = "SELECT * FROM "+Tname+" WHERE "+name+"= \""+n+"\"";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -243,5 +266,6 @@ public class DBHandler extends SQLiteOpenHelper{
         String query = "DELETE FROM "+Tname3;
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
+        db.close();
     }
 }

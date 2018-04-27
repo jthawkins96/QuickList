@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +21,9 @@ import java.util.ArrayList;
 public class RecipesActivity extends AppCompatActivity {
     TextView recipename;
     LinearLayout ilayout;
+    Button vBtn;
+    String vUrl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +40,20 @@ public class RecipesActivity extends AppCompatActivity {
         String r = getIntent().getStringExtra("RECIPE");
         recipename=findViewById(R.id.recipeName);
         ilayout=findViewById(R.id.ingredientContainer);
+        vBtn = findViewById(R.id.videoBtn);
 
         recipename.setText(r);
+
         DBHandler h = new DBHandler(this);
-        String vUrl = h.findURL(r);
+        vUrl = h.findURL(r);
+
+        //setting the video button to disable if the url is null
+        if(vUrl.matches("")) {
+            vBtn.setEnabled(false);
+        }
 
         int recipeid = h.findrecipeid(r);
-        System.out.println("-------------------------- "+recipeid+" ---------------------------");
         ArrayList<String> ings = h.insertIngredients(recipeid);
-        System.out.println("-------------------------- "+ings+" ---------------------------");
         if(ings.size()==0) {
             Toast.makeText(this,"List is empty",Toast.LENGTH_SHORT).show();
         }
@@ -58,6 +67,7 @@ public class RecipesActivity extends AppCompatActivity {
         }
     }
 
+    //When the user clicks the add ingredients button on the RecipeActivity page it takes all the ingredients on the page and puts it into the list table
     public  void onAddIngClick(View v) {
         DBHandler h = new DBHandler(this);
         if (ilayout != null)
@@ -76,10 +86,12 @@ public class RecipesActivity extends AppCompatActivity {
         startActivity(myInt);
     }
 
+    //Opens up gmail and autofills the subject and body with the recipe name and the ingredients
     public void onShareClick(View v) {
         String rname = recipename.getText().toString();
         String msgBody="";
 
+        //going through each ingredient and adding to the body
         if (ilayout != null)
         {
             for (int x = 0; x < ilayout.getChildCount(); x++)
@@ -107,5 +119,12 @@ public class RecipesActivity extends AppCompatActivity {
         else {
             Toast.makeText(getApplicationContext(), "Recipe has no ingredients", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Goes to video activity and sends the video url
+    public void onVideoClick(View v) {
+        Intent intent = new Intent(getBaseContext(), VideoActivity.class);
+        intent.putExtra("VIDEO", vUrl);
+        startActivity(intent);
     }
 }
